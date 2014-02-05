@@ -36,8 +36,9 @@ class Task {
       refreshList();
     });
 
-    _editElem.text = 'Edit';
-    _deleteElem.text = 'Delete';
+    _elem.title = 'Complete task';
+    _editElem.text = _editElem.title = 'Edit';
+    _deleteElem.text = _deleteElem.title = 'Delete';
     _editElem.className = _deleteElem.className = 'task-buttons';
   }
   
