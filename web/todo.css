@@ -66,3 +66,13 @@ h1, p {
   border-radius: 50%;
   -webkit-border-radius: 50%;
 }
+
+.task-buttons {
+    float: right;
+    height: 100%;
+    background: transparent;
+    border: none;
+    color: #aaa;
+    border-left: 1px solid #aaa;
+    cursor: pointer;
+}

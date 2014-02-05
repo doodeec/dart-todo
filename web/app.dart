@@ -24,22 +24,21 @@ class Task {
     desc = description;
     idNum++;
 
-    //TODO event fires also when children buttons are clicked
     _completeClickSubscr = _elem.onClick.listen((MouseEvent event) {
       isCompleted ? reOpen() : complete();
       refreshList();
     });
-
-    _editClickSubscr = _editElem.onClick.listen((MouseEvent event) {
-      print('edit');
-    });
-
+    _editClickSubscr = _editElem.onClick.listen(edit);
     _deleteClickSubscr = _deleteElem.onClick.listen((MouseEvent event) {
-      print('delete');
+      destroy();
+      event.preventDefault();
+      event.stopPropagation();
+      refreshList();
     });
 
     _editElem.text = 'Edit';
     _deleteElem.text = 'Delete';
+    _editElem.className = _deleteElem.className = 'task-buttons';
   }
   
   void complete() {
@@ -57,8 +56,11 @@ class Task {
     Tasks.remove(this);
   }
 
-  void edit() {
+  void edit(MouseEvent event) {
+    
     //(querySelector("#new_task_text") as InputElement).value = this.description;
+    event.preventDefault();
+    event.stopPropagation();
   }
   
   //TODO edit task
@@ -73,9 +75,8 @@ class Task {
 
 
 void main() {
-  querySelector("#add_task")
-    ..text = "Create item"
-    ..onClick.listen(createTask);
+  querySelector("#add_task").text = "Create item";
+  querySelector("#add_task_form").onSubmit.listen(createTask);
   
 //  loadStorageTasks();
 //  window.localStorage[storageKey] = '';
@@ -103,9 +104,8 @@ void refreshList() {
     item.className = "todo-item $css";
     if (item.id.isEmpty) item.id = "todo-item-$idBadge";
     if (item.text.isEmpty || item.text != me.description) item.text = me.description;
-    //TODO buttons edit/delete/complete
-//    item.children.add(editBtn);
-//    item.children.add(deleteBtn);
+    if (item.children.indexOf(editBtn) == -1) item.children.add(editBtn);
+    if (item.children.indexOf(deleteBtn) == -1) item.children.add(deleteBtn);
 
 //    if (list.children.indexOf(item) == -1) list.children.insert(0,item);
     list.children.add(item);
@@ -169,9 +169,12 @@ void saveToStorage() {
 /**
  * Creates task when the button is clicked
  */
-void createTask(MouseEvent event) {
+void createTask(Event event) {
   String text = (querySelector("#new_task_text") as InputElement).value;
 
   Tasks.add(new Task(text));
   refreshList();
+
+  event.preventDefault();
+  event.stopPropagation();
 }
