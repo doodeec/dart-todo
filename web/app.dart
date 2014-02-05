@@ -39,6 +39,8 @@ class Task {
     Tasks.remove(this);
   }
   
+  //TODO edit task
+  
   Element get getElement => _elem;
   String get description => desc;
   bool get isCompleted => completed;  
@@ -73,8 +75,9 @@ void refreshList() {
     Element item = me.getElement;
     
     item.className = "todo-item $css";
-    item.id = "todo-item-$idBadge";
-    item.text = me.description;
+    if (item.id.isEmpty) item.id = "todo-item-$idBadge";
+    if (item.text.isEmpty || item.text != me.description) item.text = me.description;
+    //TODO buttons edit/delete/complete
     
 //    if (list.children.indexOf(item) == -1) list.children.insert(0,item);
     list.children.add(item);
