@@ -14,16 +14,32 @@ class Task {
   String desc = null;
   bool completed = false;
   Element _elem = new LIElement();
-  var _subscr = null;
-  
+  Element _editElem = new ButtonElement();
+  Element _deleteElem = new ButtonElement();
+  var _completeClickSubscr = null,
+      _editClickSubscr = null,
+      _deleteClickSubscr = null;
+
   Task(String description) {
     desc = description;
     idNum++;
-    
-    _subscr = _elem.onClick.listen((MouseEvent event) {
-      isCompleted ? destroy() : complete();
+
+    //TODO event fires also when children buttons are clicked
+    _completeClickSubscr = _elem.onClick.listen((MouseEvent event) {
+      isCompleted ? reOpen() : complete();
       refreshList();
     });
+
+    _editClickSubscr = _editElem.onClick.listen((MouseEvent event) {
+      print('edit');
+    });
+
+    _deleteClickSubscr = _deleteElem.onClick.listen((MouseEvent event) {
+      print('delete');
+    });
+
+    _editElem.text = 'Edit';
+    _deleteElem.text = 'Delete';
   }
   
   void complete() {
@@ -35,13 +51,21 @@ class Task {
   }
   
   void destroy() {
-    _subscr.cancel();
+    _completeClickSubscr.cancel();
+    _editClickSubscr.cancel();
+    _deleteClickSubscr.cancel();
     Tasks.remove(this);
+  }
+
+  void edit() {
+    //(querySelector("#new_task_text") as InputElement).value = this.description;
   }
   
   //TODO edit task
   
   Element get getElement => _elem;
+  Element get getEditElement => _editElem;
+  Element get getDeleteElement => _deleteElem;
   String get description => desc;
   bool get isCompleted => completed;  
   int get id => _id;
@@ -73,12 +97,16 @@ void refreshList() {
     String idBadge = me.id.toString();
     String css = me.isCompleted ? 'todo-item-completed' : '';
     Element item = me.getElement;
-    
+    Element editBtn = me.getEditElement;
+    Element deleteBtn = me.getDeleteElement;
+
     item.className = "todo-item $css";
     if (item.id.isEmpty) item.id = "todo-item-$idBadge";
     if (item.text.isEmpty || item.text != me.description) item.text = me.description;
     //TODO buttons edit/delete/complete
-    
+//    item.children.add(editBtn);
+//    item.children.add(deleteBtn);
+
 //    if (list.children.indexOf(item) == -1) list.children.insert(0,item);
     list.children.add(item);
   }
