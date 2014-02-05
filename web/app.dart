@@ -1,6 +1,7 @@
 import 'dart:html';
 import 'dart:core';
 import 'dart:convert';
+import 'dart:async' show StreamSubscription;
 
 List<Task> Tasks = new List();
 int idNum = 1;
@@ -13,12 +14,12 @@ class Task {
   int _id = idNum;
   String desc = null;
   bool completed = false;
-  Element _elem = new LIElement();
-  Element _editElem = new ButtonElement();
-  Element _deleteElem = new ButtonElement();
-  var _completeClickSubscr = null,
-      _editClickSubscr = null,
-      _deleteClickSubscr = null;
+  Element _elem = new LIElement(),
+      _editElem = new ButtonElement(),
+      _deleteElem = new ButtonElement();
+  StreamSubscription _completeClickSubscr,
+      _editClickSubscr,
+      _deleteClickSubscr;
 
   Task(String description) {
     desc = description;
