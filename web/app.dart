@@ -4,6 +4,8 @@ import 'dart:async' show StreamSubscription;
 
 List<Task> Tasks = new List();
 int idNum = 1;
+bool editMode = false;
+Task activeTask;
 String storageKey = 'tasks';
 
 /**
@@ -21,49 +23,56 @@ class Task {
       _deleteClickSubscr;
 
   Task(String description) {
-    desc = description;
+    this.desc = description;
     idNum++;
 
-    _completeClickSubscr = _elem.onClick.listen((MouseEvent event) {
-      isCompleted ? reOpen() : complete();
+    this._completeClickSubscr = this._elem.onClick.listen((MouseEvent event) {
+      this.isCompleted ? this.reOpen() : this.complete();
       refreshList();
     });
-    _editClickSubscr = _editElem.onClick.listen(edit);
-    _deleteClickSubscr = _deleteElem.onClick.listen((MouseEvent event) {
-      destroy();
+    this._editClickSubscr = this._editElem.onClick.listen(edit);
+    this._deleteClickSubscr = this._deleteElem.onClick.listen((MouseEvent event) {
+      this.destroy();
       event.preventDefault();
       event.stopPropagation();
     });
 
-    _elem.title = 'Complete task';
-    _editElem.text = _editElem.title = 'Edit';
-    _deleteElem.text = _deleteElem.title = 'Delete';
-    _editElem.className = _deleteElem.className = 'task-buttons';
+    this._elem.title = 'Complete task';
+    this._editElem.text = _editElem.title = 'Edit';
+    this._deleteElem.text = _deleteElem.title = 'Delete';
+    this._editElem.className = _deleteElem.className = 'task-buttons';
   }
   
   void complete() {
-    completed = true;
+    this.completed = true;
   }
   
   void reOpen() {
-    completed = false;
+    this.completed = false;
   }
   
   void destroy() {
-    _completeClickSubscr.cancel();
-    _editClickSubscr.cancel();
-    _deleteClickSubscr.cancel();
+    this._completeClickSubscr.cancel();
+    this._editClickSubscr.cancel();
+    this._deleteClickSubscr.cancel();
     removeTaskElement(this);
     Tasks.remove(this);
   }
 
   void edit(MouseEvent event) {
-    //(querySelector("#new_task_text") as InputElement).value = this.description;
+    //TODO change button text when editing
+    editMode = true;
+    activeTask = this;
+    (querySelector("#new_task_text") as InputElement).value = this.description;
     event.preventDefault();
     event.stopPropagation();
   }
   
-  //TODO edit task
+  void saveDesc(String desc) {
+    this.desc = desc;
+    activeTask = null;
+    refreshList();
+  }
   
   Element get getElement => _elem;
   Element get getEditElement => _editElem;
@@ -186,7 +195,11 @@ void createTask(Event event) {
   InputElement input = querySelector("#new_task_text");
   String text = input.value;
 
-  Tasks.add(new Task(text));
+  if (editMode) {
+    activeTask.saveDesc(text);
+  } else {
+    Tasks.add(new Task(text));
+  }
   refreshList();
   input.value = null;
 
