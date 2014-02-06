@@ -33,7 +33,6 @@ class Task {
       destroy();
       event.preventDefault();
       event.stopPropagation();
-      refreshList();
     });
 
     _elem.title = 'Complete task';
@@ -54,6 +53,7 @@ class Task {
     _completeClickSubscr.cancel();
     _editClickSubscr.cancel();
     _deleteClickSubscr.cancel();
+    removeTaskElement(this);
     Tasks.remove(this);
   }
 
@@ -88,10 +88,7 @@ void main() {
  */
 void refreshList() {
   Element list = querySelector("#all_tasks");
-  
-  //TODO do not clear, only refresh ?
-  list.children.clear();
-  
+
   int i = Tasks.length-1;
   for (; i >= 0; i--) {
     Task me = Tasks[i];
@@ -107,12 +104,30 @@ void refreshList() {
     if (item.children.indexOf(editBtn) == -1) item.children.add(editBtn);
     if (item.children.indexOf(deleteBtn) == -1) item.children.add(deleteBtn);
 
-//    if (list.children.indexOf(item) == -1) list.children.insert(0,item);
-    list.children.add(item);
+    if (list.children.indexOf(item) == -1) list.children.insert(0,item);
   }
 
   //TODO localStorage saving
 //  saveToStorage();
+}
+
+
+/**
+ * removes task element from the wrapper
+ */
+void removeTaskElement(Task task) {
+  Element list = querySelector("#all_tasks");
+  String idBadge = task.id.toString();
+
+  int i = 0, length = list.children.length;
+  Element child;
+  for (; i < length; i++) {
+    child = list.children[i];
+    if (child.id == "todo-item-$idBadge") {
+      list.children.removeAt(i);
+      return;
+    }
+  }
 }
 
 
