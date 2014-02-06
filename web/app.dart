@@ -75,7 +75,6 @@ class Task {
 
 
 void main() {
-  querySelector("#add_task").text = "Create item";
   querySelector("#add_task_form").onSubmit.listen(createTask);
   
 //  loadStorageTasks();
