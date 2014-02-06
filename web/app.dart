@@ -1,5 +1,4 @@
 import 'dart:html';
-import 'dart:core';
 import 'dart:convert';
 import 'dart:async' show StreamSubscription;
 
@@ -59,7 +58,6 @@ class Task {
   }
 
   void edit(MouseEvent event) {
-    
     //(querySelector("#new_task_text") as InputElement).value = this.description;
     event.preventDefault();
     event.stopPropagation();
@@ -140,7 +138,6 @@ void loadStorageTasks() {
   
   print(storage);
   if (storage.isNotEmpty) {
-    //TODO throws error when there are multiple objects in storage
     print(JSON.decode(storage));
 //    items = JSON.decode(storage); 
   }
@@ -172,10 +169,12 @@ void saveToStorage() {
  * Creates task when the button is clicked
  */
 void createTask(Event event) {
-  String text = (querySelector("#new_task_text") as InputElement).value;
+  InputElement input = querySelector("#new_task_text");
+  String text = input.value;
 
   Tasks.add(new Task(text));
   refreshList();
+  input.value = null;
 
   event.preventDefault();
   event.stopPropagation();

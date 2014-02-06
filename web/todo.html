@@ -7,14 +7,16 @@
     <link rel="stylesheet" href="todo.css">
   </head>
   <body>
-    <h1>Todo demo</h1>
+    <div class="content">
+        <h1>Todo demo</h1>
 
-    <form id="add_task_form">
-        <input id="new_task_text" type="text" />
-        <button type="submit" id="add_task"></button>
-    </form>
-    
-    <ul id="all_tasks"></ul>
+        <form id="add_task_form">
+            <input id="new_task_text" type="text" />
+            <button type="submit" id="add_task"></button>
+        </form>
+
+        <ul id="all_tasks"></ul>
+    </div>
 
     <script type="application/dart" src="app.dart"></script>
     <script src="packages/browser/dart.js"></script>
