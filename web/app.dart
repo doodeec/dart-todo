@@ -27,8 +27,9 @@ class Task {
       _editClickSubscr,
       _deleteClickSubscr;
 
-  Task(String description) {
+  Task(String description, [bool completed]) {
     this.desc = description;
+    if (completed != null) this.completed = completed;
     idNum++;
 
     this._completeClickSubscr = this._elem.onClick.listen((MouseEvent event) {
@@ -95,8 +96,7 @@ void main() {
   querySelector("#add_task_form").onSubmit.listen(createTask);
   (querySelector("#add_task_button") as ButtonElement).text = addBtnText;
 
-//  loadStorageTasks();
-//  window.localStorage[storageKey] = '';
+  loadStorageTasks();
 }
 
 
@@ -124,8 +124,7 @@ void refreshList() {
     if (list.children.indexOf(item) == -1) list.children.insert(0,item);
   }
 
-  //TODO localStorage saving
-//  saveToStorage();
+  saveToStorage();
 }
 
 
@@ -167,14 +166,18 @@ Task getTask(int id) {
  */
 void loadStorageTasks() {
   String storage = window.localStorage[storageKey];
-  
-  print(storage);
+  List items = new List();
+
   if (storage.isNotEmpty) {
-    print(JSON.decode(storage));
-//    items = JSON.decode(storage); 
+    items = JSON.decode(storage);
   }
-  
-//  print(items);
+
+  int i = 0, length = items.length;
+  for(; i<length; i++) {
+    Map item = items[i];
+    Tasks.add(new Task(item['description'], item['completed'] == "true"));
+  }
+  refreshList();
 }
 
 
@@ -184,7 +187,7 @@ void loadStorageTasks() {
 void saveToStorage() {
   int i = 0, len = Tasks.length;
   List data = new List();
-  
+
   for(; i<len; i++) {
     Task it = Tasks[i];
     String _desc = it.description;
@@ -192,8 +195,7 @@ void saveToStorage() {
     data.add('{"description": "$_desc", "completed": "$_completed"}');
   }
   
-//  print(data.join(","));
-  window.localStorage[storageKey] = data.join(",");
+  window.localStorage[storageKey] = "["+ data.join(",") +"]";
 }
 
 
