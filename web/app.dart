@@ -6,7 +6,12 @@ List<Task> Tasks = new List();
 int idNum = 1;
 bool editMode = false;
 Task activeTask;
-String storageKey = 'tasks';
+String storageKey = 'tasks',
+    addBtnText = 'Create task',
+    editBtnText = 'Save task',
+    completeTitle = 'Complete task',
+    editText = 'Edit',
+    deleteText = 'Delete';
 
 /**
  * Task class
@@ -37,9 +42,9 @@ class Task {
       event.stopPropagation();
     });
 
-    this._elem.title = 'Complete task';
-    this._editElem.text = _editElem.title = 'Edit';
-    this._deleteElem.text = _deleteElem.title = 'Delete';
+    this._elem.title = completeTitle;
+    this._editElem.text = _editElem.title = editText;
+    this._deleteElem.text = _deleteElem.title = deleteText;
     this._editElem.className = _deleteElem.className = 'task-buttons';
   }
   
@@ -60,10 +65,12 @@ class Task {
   }
 
   void edit(MouseEvent event) {
-    //TODO change button text when editing
     editMode = true;
     activeTask = this;
-    (querySelector("#new_task_text") as InputElement).value = this.description;
+    (querySelector("#add_task_button") as ButtonElement).text = editBtnText;
+    (querySelector("#new_task_text") as InputElement)
+      ..value = this.description
+      ..focus();
     event.preventDefault();
     event.stopPropagation();
   }
@@ -71,6 +78,7 @@ class Task {
   void saveDesc(String desc) {
     this.desc = desc;
     activeTask = null;
+    (querySelector("#add_task_button") as ButtonElement).text = addBtnText;
     refreshList();
   }
   
@@ -85,7 +93,8 @@ class Task {
 
 void main() {
   querySelector("#add_task_form").onSubmit.listen(createTask);
-  
+  (querySelector("#add_task_button") as ButtonElement).text = addBtnText;
+
 //  loadStorageTasks();
 //  window.localStorage[storageKey] = '';
 }

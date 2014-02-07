@@ -19,7 +19,7 @@ h1, p {
     outline: none;
 }
 
-.add_task {
+#add_task_button {
     position: relative;
     border: 1px solid #ccc;
     background-color: #fff;
