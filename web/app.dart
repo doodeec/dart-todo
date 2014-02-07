@@ -63,6 +63,7 @@ class Task {
     this._deleteClickSubscr.cancel();
     removeTaskElement(this);
     Tasks.remove(this);
+    saveToStorage();
   }
 
   void edit(MouseEvent event) {
